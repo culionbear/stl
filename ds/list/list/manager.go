@@ -1,9 +1,8 @@
 package list
 
-import "stl/value"
-
-type List[V value.Object] interface {
+type List[V comparable] interface {
 	Push(V)
+	PushMore(...V)
 	Begin() Iterator[V]
 	End() Iterator[V]
 	Size() int
