@@ -2,12 +2,14 @@ package stack
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestIterator(t *testing.T) {
 	s := New(1, 2, 3)
-	for it := s.Begin(); it.End(); it = it.Next() {
+	for it := s.Begin(); it != s.End(); it = it.Next() {
 		fmt.Println(it.Value())
 	}
 }
@@ -16,7 +18,7 @@ func TestPush(t *testing.T) {
 	s := New[int]()
 	s.Push(1)
 	s.Push(2)
-	for it := s.Begin(); it.End(); it = it.Next() {
+	for it := s.Begin(); it != s.End(); it = it.Next() {
 		fmt.Println(it.Value())
 	}
 }
@@ -33,7 +35,7 @@ func TestPop(t *testing.T) {
 func TestPushMore(t *testing.T) {
 	s := New[int]()
 	s.PushMore(1, 2, 3, 4, 8, 99, -1)
-	for it := s.Begin(); it.End(); it = it.Next() {
+	for it := s.Begin(); it != s.End(); it = it.Next() {
 		fmt.Println(it.Value())
 	}
 }
@@ -68,4 +70,31 @@ func TestIsEmpty(t *testing.T) {
 	fmt.Println(s.IsEmpty())
 	s.Push(1)
 	fmt.Println(s.IsEmpty())
+}
+
+func BenchmarkPush(b *testing.B) {
+	s := New[int]()
+	rand.Seed(time.Now().Unix())
+	for i := 0; i < b.N; i++ {
+		s.Push(rand.Intn(5000))
+	}
+}
+
+func BenchmarkPushMore(b *testing.B) {
+	s := New[int]()
+	rand.Seed(time.Now().Unix())
+	for i := 0; i < b.N; i++ {
+		s.PushMore(rand.Intn(5000), rand.Intn(5000), rand.Intn(5000), rand.Intn(5000), rand.Intn(5000), rand.Intn(5000))
+	}
+}
+
+func BenchmarkPop(b *testing.B) {
+	s := New[int]()
+	rand.Seed(time.Now().Unix())
+	for i := 0; i < b.N; i++ {
+		s.Push(rand.Intn(5000))
+	}
+	for i := 0; i < b.N; i++ {
+		s.Pop()
+	}
 }
