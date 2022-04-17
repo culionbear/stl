@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"reflect"
 	"stl/ds/list/list"
 )
 
@@ -22,4 +23,8 @@ func (m *node[V]) Value() V {
 
 func (m *node[V]) Next() list.Iterator[V] {
 	return m.next
+}
+
+func (m *node[V]) End() bool {
+	return !reflect.ValueOf(m).IsNil()
 }
