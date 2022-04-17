@@ -1,4 +1,4 @@
-package link
+package stack
 
 import (
 	"stl/ds/list/list"
