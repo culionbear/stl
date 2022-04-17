@@ -9,7 +9,7 @@ func (m *Manager[V]) At(i int) V {
 	if i < 0 {
 		sum += m.size
 	}
-	for j := 0; j < sum; j ++ {
+	for j := 0; j < sum; j++ {
 		n = n.next
 	}
 	return n.value
@@ -22,7 +22,7 @@ func (m *Manager[V]) Sort(compare func(V, V) bool) {
 	for n := m.head; n.next != nil; n = n.next {
 		target := n
 		for k := n.next; k != nil; k = k.next {
-			if compare(target.value, k.value) {
+			if compare(k.value, target.value) {
 				target = k
 			}
 		}
@@ -35,7 +35,7 @@ func (m *Manager[V]) Remove(i int) V {
 		return *new(V)
 	}
 	defer func() {
-		m.size --
+		m.size--
 	}()
 	if i == 0 {
 		v := m.head.value
@@ -46,7 +46,7 @@ func (m *Manager[V]) Remove(i int) V {
 	if i < 0 {
 		sum += m.size
 	}
-	for i, n := 1, m.head; n.next != nil; n, i = n.next, i + 1 {
+	for i, n := 1, m.head; n.next != nil; n, i = n.next, i+1 {
 		if i == sum {
 			v := n.next.value
 			n.next = n.next.next
@@ -59,7 +59,7 @@ func (m *Manager[V]) Remove(i int) V {
 func (m *Manager[V]) RemoveValue(v V) {
 	for m.head != nil && m.head.value == v {
 		m.head = m.head.next
-		m.size --
+		m.size--
 	}
 	if m.head == nil {
 		return
@@ -67,7 +67,7 @@ func (m *Manager[V]) RemoveValue(v V) {
 	for n := m.head; n.next != nil; {
 		if n.next.value == v {
 			n.next = n.next.next
-			m.size --
+			m.size--
 		} else {
 			n = n.next
 		}
@@ -80,7 +80,7 @@ func (m *Manager[V]) Insert(i int, v V) {
 		return
 	}
 	defer func() {
-		m.size ++
+		m.size++
 	}()
 	if i == 0 {
 		n := newNode(v)
@@ -92,7 +92,7 @@ func (m *Manager[V]) Insert(i int, v V) {
 	if i < 0 {
 		sum += m.size
 	}
-	for i, n := 1, m.head.next; n != nil; i, n = i + 1, n.next {
+	for i, n := 1, m.head.next; n != nil; i, n = i+1, n.next {
 		if i == sum {
 			k := newNode(n.value)
 			k.next = n.next
