@@ -2,7 +2,7 @@ package stack
 
 import "stl/ds/list/list"
 
-// Push Push value into stack
+// Push value into stack
 func (m *Manager[V]) Push(v V) {
 	newNode := newNode(v)
 	defer func() {
@@ -16,29 +16,29 @@ func (m *Manager[V]) Push(v V) {
 	m.top = newNode
 }
 
-// PushMore Push values into stack
+// Push values into stack
 func (m *Manager[V]) PushMore(values ...V) {
 	for _, value := range values {
 		m.Push(value)
 	}
 }
 
-// Begin Get the Beginning of the iterator
+// Get the Beginning of the iterator
 func (m *Manager[V]) Begin() list.Iterator[V] {
 	return m.top
 }
 
-// End Get the end of the iterator
+// Get the end of the iterator
 func (m *Manager[V]) End() list.Iterator[V] {
 	return nil
 }
 
-// Size Get the size of the stack
+// Get the size of the stack
 func (m *Manager[V]) Size() int {
 	return m.size
 }
 
-// First Get the value of the stack on the top
+// Get the value of the stack on the top
 func (m *Manager[V]) First() V {
 	if m.top == nil {
 		return *new(V)
