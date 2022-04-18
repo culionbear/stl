@@ -23,7 +23,7 @@ func (m *Manager[V]) PushMore(values ...V) {
 	}
 }
 
-// Get the Beginning of the iterator
+// Get the beginning of the iterator
 func (m *Manager[V]) Begin() list.Iterator[V] {
 	return m.top
 }
