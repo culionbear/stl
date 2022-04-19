@@ -40,5 +40,8 @@ func (m *Manager[V]) Size() int {
 
 // Get the value of the queue head node
 func (m *Manager[V]) First() V {
+	if m.front == nil {
+		return *new(V)
+	}
 	return m.front.value
 }
