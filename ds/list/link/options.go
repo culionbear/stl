@@ -75,22 +75,22 @@ func (m *Manager[V]) RemoveValue(v V) {
 }
 
 func (m *Manager[V]) Insert(i int, v V) {
-	if abs(i) >= m.size {
+	if abs(i) >= m.size && i > 0 {
 		m.Push(v)
 		return
 	}
 	defer func() {
 		m.size++
 	}()
-	if i == 0 {
+	sum := i
+	if sum < 0 {
+		sum += m.size
+	}
+	if sum == 0 {
 		n := newNode(v)
 		n.next = m.head
 		m.head = n
 		return
-	}
-	sum := i
-	if i < 0 {
-		sum += m.size
 	}
 	for i, n := 1, m.head.next; n != nil; i, n = i+1, n.next {
 		if i == sum {

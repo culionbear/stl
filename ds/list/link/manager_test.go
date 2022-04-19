@@ -85,7 +85,7 @@ func TestRemoveValue(t *testing.T) {
 func TestInsert(t *testing.T) {
 	l := New(1, 2, 3)
 	Print(l)
-	l.Insert(-1, 999)
+	l.Insert(0, 999)
 	Print(l)
 }
 
