@@ -68,9 +68,10 @@ func TestSort(t *testing.T) {
 
 func TestRemove(t *testing.T) {
 	l := New(3, 2, 1, 9, 0, 6)
-	fmt.Printf("l.Remove(6): %v\n", l.Remove(6))
-	fmt.Printf("l.Remove(-1): %v\n", l.Remove(-1))
+	fmt.Printf("l.Remove(-6): %v\n", l.Remove(-6))
 	fmt.Printf("l.Remove(2): %v\n", l.Remove(2))
+	fmt.Printf("l.Remove(-1): %v\n", l.Remove(-1))
+	fmt.Printf("l.Remove(-2): %v\n", l.Remove(-2))
 }
 
 func TestRemoveValue(t *testing.T) {
@@ -82,8 +83,9 @@ func TestRemoveValue(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
-	l := New(1, 1, 2, 4, 5, 1, 2, 7, 8, 0)
-	l.Insert(2, 3)
+	l := New(1, 2, 3)
+	Print(l)
+	l.Insert(-1, 999)
 	Print(l)
 }
 

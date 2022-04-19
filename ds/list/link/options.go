@@ -31,20 +31,20 @@ func (m *Manager[V]) Sort(compare func(V, V) bool) {
 }
 
 func (m *Manager[V]) Remove(i int) V {
-	if abs(i) >= m.size {
+	if abs(i) >= m.size && i > 0 {
 		return *new(V)
 	}
 	defer func() {
 		m.size--
 	}()
-	if i == 0 {
-		v := m.head.value
-		m.head = m.head.next
-		return v
-	}
 	sum := i
 	if i < 0 {
 		sum += m.size
+	}
+	if sum == 0 {
+		v := m.head.value
+		m.head = m.head.next
+		return v
 	}
 	for i, n := 1, m.head; n.next != nil; n, i = n.next, i+1 {
 		if i == sum {
