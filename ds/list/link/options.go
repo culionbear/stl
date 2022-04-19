@@ -1,7 +1,7 @@
 package link
 
 func (m *Manager[V]) At(i int) V {
-	if abs(i) >= m.size {
+	if abs(i) >= m.size && i > 0 {
 		return *new(V)
 	}
 	n := m.head

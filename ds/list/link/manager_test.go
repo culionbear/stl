@@ -47,7 +47,7 @@ func TestFirst(t *testing.T) {
 func TestAt(t *testing.T) {
 	l := New(1, 2, 4, 8)
 	fmt.Printf("l.At(5): %v\n", l.At(5))
-	fmt.Printf("l.At(-1): %v\n", l.At(-1))
+	fmt.Printf("l.At(-4): %v\n", l.At(-4))
 	fmt.Printf("l.At(3): %v\n", l.At(3))
 	fmt.Printf("l.At(0): %v\n", l.At(0))
 }
