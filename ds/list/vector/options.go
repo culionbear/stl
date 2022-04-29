@@ -97,6 +97,7 @@ func (m *Manager[V]) Insert(i int, v V) {
 		i += m.size
 	}
 	if m.size >= m.cap {
+		m.cap *= 2
 		tmp := make([]V, m.cap, m.cap)
 		copy(tmp, m.data)
 		m.data = tmp
