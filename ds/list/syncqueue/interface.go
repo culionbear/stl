@@ -4,10 +4,12 @@ import "stl/ds/list/list"
 
 // Push value into queue
 func (m *Manager[V]) Push(v V) {
+	m.mutex.Lock()
 	n := newNode(v)
 	defer func() {
 		m.tail = n
 		m.size++
+		m.mutex.Unlock()
 	}()
 	if m.front == nil {
 		m.front = n

@@ -3,9 +3,12 @@ package link
 import (
 	"fmt"
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 )
+
+var wg sync.WaitGroup
 
 func Print[V comparable](l *Manager[V]) {
 	for it := l.Begin(); it != l.End(); it = it.Next() {
@@ -21,15 +24,42 @@ func TestIterator(t *testing.T) {
 
 func TestPush(t *testing.T) {
 	l := New[int]()
-	l.Push(1)
-	l.Push(2)
-	Print(l)
+	wg.Add(2)
+	go func() {
+		for i := 0; i < 1000; i++ {
+			l.Push(i)
+		}
+		wg.Done()
+	}()
+	go func() {
+		for i := 0; i < 1000; i++ {
+			l.Push(i + 100)
+		}
+		wg.Done()
+	}()
+	wg.Wait()
+	// Print(l)
+	fmt.Printf("l.Size(): %v\n", l.Size())
 }
 
 func TestPushMore(t *testing.T) {
 	l := New[int]()
-	l.PushMore(1, 2, 3, 4)
-	Print(l)
+	wg.Add(2)
+	go func() {
+		for i := 0; i < 1000; i++ {
+			l.PushMore(i, 1, 2, 3, 4)
+		}
+		wg.Done()
+	}()
+	go func() {
+		for i := 0; i < 1000; i++ {
+			l.PushMore(i+100, 1, 2, 3, 4)
+		}
+		wg.Done()
+	}()
+	wg.Wait()
+	// Print(l)
+	fmt.Printf("l.Size(): %v\n", l.Size())
 }
 
 func TestSize(t *testing.T) {
@@ -54,53 +84,123 @@ func TestAt(t *testing.T) {
 
 func TestSort(t *testing.T) {
 	l := New(3, 2, 1, 9, 0, 6)
-	l.Sort(func(i1, i2 int) bool {
-		return i1 < i2
-	})
+	wg.Add(2)
+	go func() {
+		l.Sort(func(i1, i2 int) bool {
+			return i1 < i2
+		})
+		wg.Done()
+	}()
 	Print(l)
-	l.Sort(func(i1, i2 int) bool {
-		return i2 < i1
-	})
+	go func() {
+		l.Sort(func(i1, i2 int) bool {
+			return i2 < i1
+		})
+		wg.Done()
+	}()
+	wg.Wait()
 	Print(l)
 	l.Sort(nil)
 	Print(l)
 }
 
 func TestRemove(t *testing.T) {
-	l := New(3, 2, 1, 9, 0, 6)
-	fmt.Printf("l.Remove(-6): %v\n", l.Remove(-6))
-	fmt.Printf("l.Remove(2): %v\n", l.Remove(2))
-	fmt.Printf("l.Remove(-1): %v\n", l.Remove(-1))
-	fmt.Printf("l.Remove(-2): %v\n", l.Remove(-2))
+	l := New[int]()
+	for i := 0; i < 10000; i++ {
+		l.Push(i)
+	}
+	wg.Add(5)
+	go func() {
+		l.Remove(88)
+		wg.Done()
+	}()
+	go func() {
+		l.Remove(88)
+		wg.Done()
+	}()
+	go func() {
+		l.Remove(88)
+		wg.Done()
+	}()
+	go func() {
+		l.Remove(88)
+		wg.Done()
+	}()
+	go func() {
+		l.Remove(88)
+		wg.Done()
+	}()
+	wg.Wait()
+	Print(l)
+	fmt.Printf("l.Size(): %v\n", l.Size())
 }
 
 func TestRemoveValue(t *testing.T) {
 	l := New(1, 1, 2, 4, 5, 1, 2, 7, 8, 0)
-	l.RemoveValue(1)
+	wg.Add(2)
+	go func() {
+		l.RemoveValue(1)
+		wg.Done()
+	}()
 	Print(l)
-	l.RemoveValue(2)
+	go func() {
+		l.RemoveValue(1)
+		wg.Done()
+	}()
+	wg.Wait()
 	Print(l)
 }
 
 func TestInsert(t *testing.T) {
 	l := New(1, 2, 3)
+	wg.Add(2)
+	go func() {
+		l.Insert(1, 1000)
+		wg.Done()
+	}()
 	Print(l)
-	l.Insert(0, 999)
+	go func() {
+		l.Insert(1, 10001)
+		wg.Done()
+	}()
+	wg.Wait()
 	Print(l)
 }
 
 func BenchmarkPush(b *testing.B) {
 	l := New[int]()
-	for i := 0; i < b.N; i++ {
-		l.Push(1)
-	}
+	wg.Add(2)
+	go func() {
+		for i := 0; i < b.N; i++ {
+			l.Push(1)
+		}
+		wg.Done()
+	}()
+	go func() {
+		for i := 0; i < b.N; i++ {
+			l.Push(1)
+		}
+		wg.Done()
+	}()
+	wg.Wait()
 }
 
 func BenchmarkPushMore(b *testing.B) {
 	l := New[int]()
-	for i := 0; i < b.N; i++ {
-		l.PushMore(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-	}
+	wg.Add(2)
+	go func() {
+		for i := 0; i < b.N; i++ {
+			l.PushMore(1, 1, 1, 1, 1)
+		}
+		wg.Done()
+	}()
+	go func() {
+		for i := 0; i < b.N; i++ {
+			l.PushMore(1, 1, 1, 1, 1)
+		}
+		wg.Done()
+	}()
+	wg.Wait()
 }
 
 func BenchmarkAt(b *testing.B) {

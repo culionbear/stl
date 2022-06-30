@@ -1,22 +1,24 @@
-package queue
+package stack
 
 import "stl/ds/list/list"
 
-// Push value into queue
+// Push value into stack
 func (m *Manager[V]) Push(v V) {
-	n := newNode(v)
+	m.mutex.Lock()
+	newNode := newNode(v)
 	defer func() {
-		m.tail = n
 		m.size++
+		m.mutex.Unlock()
 	}()
-	if m.front == nil {
-		m.front = n
+	if m.top == nil {
+		m.top = newNode
 		return
 	}
-	m.tail.next = n
+	newNode.next = m.top
+	m.top = newNode
 }
 
-// Push values into queue
+// Push values into stack
 func (m *Manager[V]) PushMore(values ...V) {
 	for _, value := range values {
 		m.Push(value)
@@ -25,7 +27,7 @@ func (m *Manager[V]) PushMore(values ...V) {
 
 // Get the beginning of the iterator
 func (m *Manager[V]) Begin() list.Iterator[V] {
-	return m.front
+	return m.top
 }
 
 // Get the end of the iterator
@@ -33,15 +35,15 @@ func (m *Manager[V]) End() list.Iterator[V] {
 	return nil
 }
 
-// Get the size of the queue
+// Get the size of the stack
 func (m *Manager[V]) Size() int {
 	return m.size
 }
 
-// Get the value of the queue head node
+// Get the value of the stack on the top
 func (m *Manager[V]) First() V {
-	if m.front == nil {
+	if m.top == nil {
 		return *new(V)
 	}
-	return m.front.value
+	return m.top.value
 }

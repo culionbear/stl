@@ -1,6 +1,7 @@
 package link
 
 func (m *Manager[V]) At(i int) V {
+	m.mutex.Lock()
 	if abs(i) >= m.size && i > 0 {
 		return *new(V)
 	}
@@ -12,10 +13,12 @@ func (m *Manager[V]) At(i int) V {
 	for j := 0; j < sum; j++ {
 		n = n.next
 	}
+	m.mutex.Unlock()
 	return n.value
 }
 
 func (m *Manager[V]) Sort(compare func(V, V) bool) {
+	m.mutex.Lock()
 	if m.head == nil || m.size <= 1 || compare == nil {
 		return
 	}
@@ -28,14 +31,17 @@ func (m *Manager[V]) Sort(compare func(V, V) bool) {
 		}
 		n.value, target.value = target.value, n.value
 	}
+	m.mutex.Unlock()
 }
 
 func (m *Manager[V]) Remove(i int) V {
+	m.mutex.Lock()
 	if abs(i) >= m.size && i > 0 {
 		return *new(V)
 	}
 	defer func() {
 		m.size--
+		m.mutex.Unlock()
 	}()
 	sum := i
 	if i < 0 {
@@ -57,6 +63,7 @@ func (m *Manager[V]) Remove(i int) V {
 }
 
 func (m *Manager[V]) RemoveValue(v V) {
+	m.mutex.Lock()
 	for m.head != nil && m.head.value == v {
 		m.head = m.head.next
 		m.size--
@@ -72,15 +79,18 @@ func (m *Manager[V]) RemoveValue(v V) {
 			n = n.next
 		}
 	}
+	m.mutex.Unlock()
 }
 
 func (m *Manager[V]) Insert(i int, v V) {
+	m.mutex.Lock()
 	if abs(i) >= m.size && i > 0 {
 		m.Push(v)
 		return
 	}
 	defer func() {
 		m.size++
+		m.mutex.Unlock()
 	}()
 	sum := i
 	if sum < 0 {
